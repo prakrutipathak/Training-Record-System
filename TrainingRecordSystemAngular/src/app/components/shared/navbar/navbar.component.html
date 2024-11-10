@@ -1,0 +1,102 @@
+<nav class="navbar navbar-expand-sm navbar-dark box-shadow ">
+    <div class="container-fluid">
+        <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="router-link-active">
+             <img src="assets/trslogo2.png" alt="logo img" width="70" height="28">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+
+
+                <!-- <li class="nav-item" >
+                    <a class="nav-link" [routerLink]="['/home']" routerLinkActive="router-link-active">Home</a>
+                </li> -->
+                <li class="nav-item" *ngIf="role == 0">
+                    <a class="nav-link" [routerLink]="['/trainer-list']" routerLinkActive="router-link-active">Trainer
+                        List</a>
+                </li>
+
+                <li class="nav-item" *ngIf="role == 0">
+                    <div ngbDropdown display="dynamic" class="d-inline-block">
+                        <a class="nav-link" id="dropdownBasic1" ngbDropdownToggle style="cursor: pointer;">Report</a>
+
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" placement="bottom-left"
+                            class="dropdown-menu">
+                            <a class="dropdown-item" [routerLink]="['/monthly-report']"
+                                routerLinkActive="router-link-active" style="cursor: pointer;" >Monthly Report</a>
+                            <a class="dropdown-item" [routerLink]="['/Date-range-report']"
+                                routerLinkActive="router-link-active" style="cursor: pointer;" >Date Range Report</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item" *ngIf="role == 1">
+                    <a class="nav-link" [routerLink]="['/upcomingtrainingTopic']" routerLinkActive="router-link-active">Training Programs</a>
+                </li>
+
+                <li class="nav-item" *ngIf="role == 1">
+                    <a class="nav-link" [routerLink]="['/participantsByManager']"
+                        routerLinkActive="router-link-active">Participants</a>
+                </li>
+
+                <li class="nav-item" *ngIf="role == 2">
+                    <a class="nav-link" [routerLink]="['/training-topics']"
+                        routerLinkActive="router-link-active">Training Topics</a>
+                </li>
+
+                <li class="nav-item" *ngIf="role == 2">
+                    <a class="nav-link" [routerLink]="['/all-participants']" routerLinkActive="router-link-active">All Participants</a>
+                </li>
+
+
+
+
+            </ul>
+            <!-- Authentication -->
+            <div *ngIf="!isAuthenticated">
+
+                <ul class="navbar-nav ml-auto">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn btn-secondary" [routerLink]="['/signup']" routerLinkActive="router-link-active">
+                            <i class="fa-solid fa-user-plus"></i> SIGN UP
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" [routerLink]="['/signin']"
+                            routerLinkActive="router-link-active">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> SIGN IN
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+            <div *ngIf="isAuthenticated">
+
+                <ul class="nav navbar-nav ml-auto" *ngIf="isAuthenticated">
+
+
+          <div class="row">
+            <div class="col">
+              <div ngbDropdown display="dynamic" class="d-inline-block">
+                <button type="button" class="btn  dropdown-toggle " style="color: white;" id="dropdownBasic1" ngbDropdownToggle>
+                  <i class="fa-solid fa-user"></i> {{username | titlecase }}
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" placement="bottom-left" class="dropdown-menu">
+                  <button ngbDropdownItem class="btn btn-danger dropdown-item" (click)="signOut()" style="cursor: pointer;" [routerLink]="['/signin']" routerLinkActive="router-link-active"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+                  <button ngbDropdownItem class="dropdown-item" [routerLink]="['/changePassword']" routerLinkActive="router-link-active"><i class="fa-solid fa-pen-nib"></i> Change Password</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+</nav>

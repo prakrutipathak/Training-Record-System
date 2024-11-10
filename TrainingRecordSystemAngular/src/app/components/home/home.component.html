@@ -1,0 +1,10 @@
+<div class="home">
+    <div class="overlay">
+        <div class="text custom">
+            <h1 class="display-4">Welcome {{ username | titlecase }}</h1>
+            <p><b><h2>Training Record System</h2></b></p>
+            <br>
+            <h6 *ngIf="username == null"> Click here to <a [routerLink]="['/signin']"  class="custom-link" routerLinkActive="router-link-active">Sign In</a>.</h6>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <img src="assets/loaderImage.gif" alt="loading" />
+</div>
+
+<h1 class="custom-heading text-center my-3">Trainers</h1>
+
+
+<div *ngIf="!loading" class="container">
+    
+    <table class="table table-striped">
+        <thead >
+            <tr>
+                <th class="custom-thead text-light">First Name</th>
+                <th class="custom-thead text-light">Last Name</th>
+                <th class="custom-thead text-light">Job Role</th>
+                <th class="custom-thead text-light">Assign</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!loading && (!trainer || trainer.length === 0)">
+                <td colspan="6" class="text-center">No record found!</td>
+            </tr>
+            
+            <tr *ngFor="let t of trainer" >
+                
+                <td >{{t.firstName}}</td>
+                <td >{{t.lastName}}</td>
+                <td >{{t.job.jobName}}</td>
+                <td><button class="btn btn-secondary" [routerLink]="['/assign-topic/', t.userId]" routerLinkActive="router-link-active" >Topics</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-sm-2 page-size-container">
+            <br>
+            <label for="pageSize" class="form-label"></label>
+            <select id="pageSize" class="form-select" [(ngModel)]="pageSize" (change)="changePageSize(pageSize)">
+                <option [ngValue]="2">2</option>
+                <option [ngValue]="4">4</option>
+                <option [ngValue]="6">6</option>
+            </select>
+        </div>
+        <div class="col-sm-8 d-flex justify-content-center">
+            <ul class="pagination mb-0">
+                <li class="page-item">
+                    <button class="page-link" (click)="previousPage()" [disabled]="pageNumber === 1">Previous</button>
+                </li>
+                <li *ngFor="let i of [].constructor(totalPages); let index = index" class="page-item" [class.active]="pageNumber === index + 1">
+                    <button class="page-link" (click)="changePage(index + 1)">{{ index + 1 }}</button>
+                </li>
+                <li class="page-item">
+                    <button class="page-link" (click)="nextPage()" [disabled]="pageNumber === totalPages">Next</button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-2 text-center">
+            <a class="btn btn-dark" style="background-color: #00b4c1;" [routerLink]="['/addtrainer']" routerLinkActive="router-link-active" ><i class="fa fa-user-plus"></i></a>
+        </div>
+
+    </div>
+    
+
+
+</div>

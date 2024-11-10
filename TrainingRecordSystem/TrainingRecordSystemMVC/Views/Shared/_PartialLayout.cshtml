@@ -1,0 +1,48 @@
+﻿@{
+    var userId = Convert.ToInt32(Context.Request.Cookies["UserId"]);
+}
+
+@if (userId == 1)
+{
+    @* Admin *@
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Index">All Trainer</a>
+    </li>
+
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-light" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Reports
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item text-dark" asp-action="MonthlyAdminReport" asp-controller="Admin">Monthly Report</a>
+            <a class="dropdown-item text-dark" asp-action="DaterangeBasedReport" asp-controller="Admin">Date Range Report</a>
+        </div>
+    </li>
+}
+else if (userId == 2 || userId == 3)
+{
+    @* Manager *@
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-area="" asp-controller="Manager" asp-action="UpcomimngTrainingProgram">Upcoming Training</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-area="" asp-controller="Manager" asp-action="GetParticipantsByManagerId">Participants</a>
+    </li>
+}
+else if(userId > 2)
+{
+    @* Trainer *@
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-area="" asp-controller="Trainer" asp-action="Index">All Topics</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-area="" asp-controller="Trainer" asp-action="GetNominatedParticipants">Nominated Participants</a>
+    </li>
+}
+
+
+
+
+
+

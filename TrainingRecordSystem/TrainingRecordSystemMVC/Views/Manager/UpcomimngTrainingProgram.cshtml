@@ -1,0 +1,175 @@
+﻿@using TrainingRecordSystemMVC.ViewModels
+@model List<UpcomingTrainingViewModel>
+
+@{
+    int jobId = ViewBag.JobId;
+
+    var jobs = ViewBag.Jobs;
+}
+<h1 class="custom-heading text-center my-3">Upcoming Training Program</h1>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-4 mt-3">
+            <div class="form-outline" style="width: 100%;">
+                <label class="control-label"><b>Job Role:</b></label>
+                <select id="jobRoleDropdown" class="form-control" style="border-color:#7B57CB;">
+                    <option value="">--Select Job Role--</option>
+                    @{
+                        jobs = ViewBag.Jobs as List<AllJobViewModel>;
+
+                        if (jobs != null)
+                        {
+                            for (int i = 0; i < jobs.Count; i++)
+                            {
+                                <option value="@jobs[i].JobId" selected='@(jobId == jobs[i].JobId)'>@jobs[i].JobName </option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-light" style="background-color:#00b4c1">Trainer Name</th>
+                <th class="text-light" style="background-color:#00b4c1">Training Topic</th>
+                <th class="text-light" style="background-color:#00b4c1">Job Role </th>
+                <th class="text-light" style="background-color:#00b4c1">Start Date</th>
+                <th class="text-light" style="background-color:#00b4c1">End Date</th>
+
+            </tr>
+        </thead>
+        @if (Model == null || Model.Count == 0)
+        {
+            <tbody>
+            <td colspan="6" class="text-center">
+                No Record Found!
+            </td>
+            </tbody>
+        }
+        else
+        {
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+
+                        <td>@t.TrainerName</td>
+                        <td>@t.TopicName</td>
+                        <td>@t.JobName</td>
+                        <td>@t.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@t.EndDate.ToString("dd/MM/yyyy")</td>
+
+                    </tr>
+                }
+            </tbody>
+        }
+
+    </table>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#jobRoleDropdown').change(function () {
+            var jobId = $(this).val();
+            // $('#monthDiv').hide();
+
+
+            if (jobId !== "") {
+                window.location.href = "/Manager/UpcomimngTrainingProgram?jobid=" + jobId;
+            }
+            else {
+                window.location.href = "/Manager/UpcomimngTrainingProgram";
+            }
+        });
+
+
+
+
+    });
+</script>
+
+
+<style>
+
+
+    /* Positioning and styling the loader overlay */
+    .loader-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Ensure it's on top */
+    }
+
+    /* Centering the loader image */
+    .loader-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 10px; /* Adjust the spacing as needed */
+    }
+
+        .table th,
+        .table td {
+            padding: 10px; /* Add padding if needed for content */
+            text-align: center;
+        }
+
+    .custom-thead {
+        background-color: #00b4c1;
+    }
+
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .form-select:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .pagination {
+        margin: 1rem;
+    }
+
+    .custom-heading {
+        margin-top: 15px;
+        font-size: 2rem; /* Adjust the size as needed */
+        font-weight: bold; /* Makes the text bold */
+        color: #000000; /* Custom color */
+        text-align: center; /* Center the text */
+    }
+
+</style>

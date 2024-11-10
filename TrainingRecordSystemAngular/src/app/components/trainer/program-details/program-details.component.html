@@ -1,0 +1,27 @@
+<div *ngIf="loading" class="text-center mt-5">
+    <img src="assets/loader.gif" alt="Loading...">
+</div>
+
+<div class="container" *ngIf="!loading">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow-sm mb-4 mt-5">
+                <div class="card-body">
+                    <h2 class="card-title mb-2"><i class="fas fa-info-circle"></i> My Training Details</h2>
+                    <p class="card-text mb-2"><i class="fas fa-calendar-alt"></i> Start Date: {{ programData.startDate | date }}</p>
+                    <p class="card-text mb-2"><i class="fas fa-calendar-alt"></i> End Date: {{ programData.endDate | date }}</p>
+                    <div class="final-price mb-2"><i class="fas fa-clock"></i> Time: {{ programData.startTime | date:'shortTime' }} to {{ programData.endTime | date:'shortTime' }}</div>
+                    <div class="price mb-2"><i class="fas fa-chalkboard-teacher"></i> Mode: {{ programData.modePreference | titlecase }}</div>
+                    <div class="final-price mb-2"><i class="fas fa-hourglass-half"></i> Duration: {{ programData.duration }} hrs</div>
+                    <div class="final-price mb-2"><i class="fas fa-users"></i> Target Audience: {{ programData.targetAudience }}</div>
+                    <div>
+                        <a class="btn civicaBtn btn-sm" [routerLink]="['/training-topics']">
+                            <i class="fas fa-list"></i> Back to list
+                        </a>
+                        <a class="btn civicaBtn btn-sm mx-2" [routerLink]="['/update-training-program-detail/', topicId]" routerLinkActive="router-link-active">Update details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

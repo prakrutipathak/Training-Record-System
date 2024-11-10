@@ -1,0 +1,113 @@
+﻿@using TrainingRecordSystemMVC.ViewModels
+@model AddParticipateViewModel
+
+<div class="container">
+
+    <h2 class="custom-heading text-center">Add Participant</h2>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form asp-action="AddParticipant" method="post">
+                        <input type="hidden" asp-for="UserId" value="@User.FindFirst("UserId").Value"/>
+                        <!-- Department -->
+                        <div class="mb-3">
+                            
+                                <label asp-for="JobId" class="form-label">Job Role</label>
+                                <select class="form-select" asp-for="JobId" asp-items="@(new SelectList(ViewBag.Jobs, "JobId", "JobName"))">
+                                    <option value=0 selected="true" disabled>--Select Job Role--</option>
+
+                                </select>
+                                <span asp-validation-for="JobId" class="text-danger"></span>
+                            
+                     
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="FirstName" class="form-label">First Name</label>
+                                <input type="text" asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LastName" class="form-label">Last Name</label>
+                                <input type="text" asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input type="email" asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+
+
+
+
+                        <div class="d-flex justify-content-between">
+                            <a type="button" asp-action="GetParticipantsByManagerId" class="btn btn-outline-danger me-2"><i class="fas fa-arrow-left"></i></a>
+                            <input style="background-color:#00b4c1" type="submit" value="Save" class="btn btn-primary btn-block" />
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        /* Positioning and styling the loader overlay */
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        /* Centering the loader image */
+        .loader-image {
+            width: 50px;
+            height: 50px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .custom-heading {
+            margin-top: 15px;
+            font-size: 2rem; /* Adjust the size as needed */
+            font-weight: bold; /* Makes the text bold */
+            color: #000000; /* Custom color */
+            text-align: center; /* Center the text */
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .btn-block {
+            background-color: #009CA6;
+            width: 100%;
+        }
+    </style>

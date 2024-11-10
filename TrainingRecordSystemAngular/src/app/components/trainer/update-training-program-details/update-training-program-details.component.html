@@ -1,0 +1,103 @@
+<div class="container">
+    <div *ngIf="loading" class="loader-overlay">
+        <img src="assets/loaderImage.gif" class="loader-overlay" alt="loading" />
+    </div>
+
+    <h2 class="custom-heading text-center my-3">Update Training Program Details</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form [formGroup]="programDetailForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                        <div class="row mb-3">
+                            <div class="col md-6">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" formControlName="startDate" [min]="maxDate()">
+                                <div *ngIf="formControls['startDate'].invalid && formControls['startDate'].touched">
+                                    <small class="text-danger" *ngIf="formControls['startDate'].errors?.['required']">
+                                        Start date is required.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col md-6">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" formControlName="endDate"  [min]="maxDate()">
+                                <div *ngIf="formControls['endDate'].invalid && formControls['endDate'].touched">
+                                    <small class="text-danger" *ngIf="formControls['endDate'].errors?.['required']">
+                                        End date is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col md-4">
+                                <label for="startTime" class="form-label">Start Time</label>
+                                <select class="form-select" formControlName="startTime" (change)="calculateDuration()">
+                                    <option value=0 selected disabled>- Select time --</option>
+                                    <option *ngFor="let time of timeList" [value]="time.value" [disabled]="time.value == endTime">{{time.name}}</option>
+                                </select>
+                                <div *ngIf="formControls['startTime'].invalid && formControls['startTime'].touched">
+                                    <small class="text-danger"
+                                        *ngIf="formControls['startTime'].errors?.['required'] || formControls['startTime'].errors?.['invaliddropdown']">
+                                        Start time is required
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col md-4">
+                                <label for="endTime" class="form-label">End Time</label>
+                                <select class="form-select" formControlName="endTime" (change)="calculateDuration()">
+                                    <option value=0 selected disabled>- Select time --</option>
+                                    <option *ngFor="let time of timeList" [value]="time.value" [disabled]="time.value == startTime">{{time.name}}</option>
+                                </select>
+                                <div *ngIf="formControls['endTime'].invalid && formControls['endTime'].touched">
+                                    <small class="text-danger"
+                                        *ngIf="formControls['endTime'].errors?.['required'] || formControls['endTime'].errors?.['invaliddropdown']">
+                                        End time is required
+                                    </small>
+                                  
+                                </div>
+                                   
+                                
+                            </div>
+                            <div class="col md-4">
+                                <label class="form-label">Duration</label>
+                                <input class="form-control" type="text" disabled [value]="duration">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="modePreference" class="form-label">Mode Preference</label>
+                                <select class="form-select" formControlName="modePreference">
+                                    <option value="" selected disabled>-- Select mode --</option>
+                                    <option value="offline">Offline</option>
+                                    <option value="online">Online</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                                <div *ngIf="formControls['modePreference'].invalid && formControls['modePreference'].touched">
+                                    <small class="text-danger"
+                                        *ngIf="formControls['modePreference'].errors?.['required'] || formControls['modePreference'].errors?.['invaliddropdown']">
+                                        Mode of preference is required
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="targetAudience" class="form-label">Target Audience</label>
+                                <textarea class="form-control" formControlName="targetAudience" placeholder="Additional notes"></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-danger me-2" [routerLink]="['/training-topics']" routerLinkActive="router-link-active"><i class="fas fa-arrow-left"></i></button>
+                            <button type="submit" class="btn btn-primary btn-block" [disabled]="programDetailForm.invalid">Submit</button>
+                        
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>

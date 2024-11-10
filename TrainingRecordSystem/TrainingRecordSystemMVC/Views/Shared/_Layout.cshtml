@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrainingRecordSystemMVC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TrainingRecordSystemMVC.styles.css" asp-append-version="true" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark border-bottom box-shadow" style="background-color:#009CA6">
+            <div class="container-fluid">
+                <a class="navbar-brand" style="font-size:1.5rem" asp-area="" asp-controller="Home" asp-action="Index">
+                    CIVICΛ
+                    <img src="~/images/trslogo2.png" alt="logo img" width="70" height="28" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        <partial name="_PartialLayout" />
+                    </ul>
+                    <partial name="_AuthenticationView" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="">
+            @{
+                var successMessage = TempData["SuccessMessage"]?.ToString();
+                var errorMessage = TempData["ErrorMessage"]?.ToString();
+            }
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                <div id="AutoCloseAlert" class="alert alert-success alert-dismissible fade show">
+                    <b>Success:</b>@successMessage
+                    <button type="button" class="btn btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div id="AutoCloseAlert" class="alert alert-danger alert-dismissible fade show">
+                    <b>Error:</b>@errorMessage
+                    <button type="button" class="btn btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            <div id="messageContainer" class="message-container"></div>
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-light text-center" style="background-color:#009CA6">
+        <div class="container">
+            &copy; 2024 - TrainingRecordSystemMVC
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        setTimeout(function () {
+            document.getElementById('AutoCloseAlert').classList.add('fade');
+            document.getElementById('AutoCloseAlert').classList.add('show');
+            document.getElementById('AutoCloseAlert').style.display = 'none';
+        }, 5000)
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<style>
+    .navbar {
+        background-color: #009CA6;
+        /* Light grey background */
+        box-shadow: 0 4px 2px -2px gray;
+        /* Add a subtle shadow */
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        /* Make brand bold */
+        font-size: 1.5rem;
+        /* Increase font size */
+    }
+
+    .nav-link {
+        font-size: 1rem;
+        /* Standard font size */
+        padding: 0.7rem 1rem;
+        /* Increase padding for better touch target */
+    }
+
+        .nav-link:hover {
+            background-color: #D62598;
+            border-radius: 10px;
+        }
+
+    .d-inline-block {
+        border-radius: 10px;
+        color: #000;
+    }
+
+        .d-inline-block:hover {
+            background-color: #D62598;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+    .navbar-toggler {
+        border: none;
+        /* Remove border around toggler */
+    }
+
+    .navbar-toggler-icon {
+        color: #ffffff;
+        /* Dark color for toggler icon */
+    }
+
+    .nav-item .nav-link {
+        /* font-size: 20px; */
+        font-weight: bold;
+        color: white;
+        transition: color 0.3s;
+        /* Smooth transition for color change */
+    }
+
+
+        .nav-item .nav-link .fas {
+            margin-right: 0.5rem;
+            /* Space between icon and text */
+        }
+
+    .navbar-nav.ml-auto {
+        margin-left: auto;
+        /* Align items to the right */
+    }
+
+
+    .dropdown-menu li {
+        position: relative;
+    }
+
+    .dropdown-menu .dropdown-submenu {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: -7px;
+    }
+
+    .dropdown-menu .dropdown-submenu-left {
+        right: 100%;
+        left: auto;
+    }
+
+    .dropdown-menu > li:hover > .dropdown-submenu {
+        display: block;
+    }
+
+    .dropdown-submenu {
+        position: relative;
+    }
+
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+
+
+    .dropdown-item:hover {
+        background-color: #D62598;
+        color: #fff;
+    }
+</style>

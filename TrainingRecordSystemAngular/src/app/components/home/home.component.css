@@ -1,0 +1,33 @@
+.home {
+    background: url('src/assets/training1.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh; /* Full viewport height */
+    width: 99vw; /* Full viewport width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    padding: 40px;
+    border-radius: 15px;
+}
+
+.text.custom {
+    color: white;
+    text-align: center;
+}
+
+.custom-link {
+    color: #ffd700; /* Gold for sign-in link */
+}
+
+.custom-link:hover {
+    color: #ff4500; /* Change color on hover */
+}
+
+h1, h2, h6 {
+    margin: 0;
+}

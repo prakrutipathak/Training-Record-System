@@ -1,0 +1,274 @@
+﻿@using TrainingRecordSystemMVC.ViewModels;
+
+@{
+    var participateId = ViewBag.PartcipateId;
+}
+
+<div class="container">
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5>Nominate topic to @Model.FirstName</h5>
+                </div>
+                <div class="card-body">
+                    <form id="createNominationForm">
+                        <input type="hidden" id="userId" value="@User.FindFirst("UserId").Value" />
+                        <div class="row mb-3">
+                            <label class="form-label" for="topicDropdown">Topic:</label>
+                            <div class="col-md-8">
+
+                                <select id="topicDropdown" class="form-control" style="border-color:#7B57CB;">
+                                    <option value=0>--Select Topic--</option>
+                                    @{
+                                        var topics = ViewBag.Topics as List<TrainingProgramDetailJViewModel>;
+
+                                        if (topics != null)
+                                        {
+                                            for (int i = 0; i < topics.Count; i++)
+                                            {
+                                            // <option value="@topics[i].TrainerTopic.Topic.TopicId" selected='@(userId == topics[i].TrainerTopic.Topic.TopicId)'>@topics[i].TrainerTopic.Topic.TopicName </option>
+                                                <option value="@topics[i].TrainerTopic.Topic.TopicId">@topics[i].TrainerTopic.Topic.TopicName </option>
+                                            }
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="form-label" for="trainerDropdown">Trainer:</label>
+                            <div class="col-md-8">
+
+                                <select id="trainerDropdown" class="form-control" style="border-color:#7B57CB;">
+                                    <option value=0>--Select Trainer--</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" id="modePreferenceDiv">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <button type="submit" class="btn btn-primary" style="background-color: #00b4c1;">Nominate</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="GetParticipantsByManagerId" type="button" class="btn btn-outline-danger me-2"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        var selectedTopicId = document.getElementById('topicDropdown').value;
+
+        $('#topicDropdown').change(function () {
+            var topicId = $(this).val();
+
+            if (topicId != 0) {
+                $.ajax({
+                    url: "http://localhost:5038/api/Topic/GetTrainerByTopicId?topicId=" + topicId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#trainerDropdown').empty();
+                            $('#modePreferenceDiv').empty();
+
+
+                            response.data.forEach(function (trainer) {
+                                $('#trainerDropdown').append(`
+                                                                <option value="0">--Select Trainer--</option>
+                                                                <option value="${trainer.trainerTopic.user.userId}">${trainer.trainerTopic.user.firstName}</option>
+                                                            `);
+                            });
+                        } else {
+                            $('#trainerDropdown').empty(); // Clear dropdown if no data
+                            $('#trainerDropdown').append('<option value="">No trainers found</option>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        $('#trainerDropdown').empty(); // Clear dropdown on error
+                        $('#trainerDropdown').append('<option value="">Error retrieving trainers</option>');
+                    },
+                    complete: function () {
+                        // Optionally, you can hide loaders or perform other actions here
+                    }
+                });
+            }
+        });
+
+
+        $('#trainerDropdown').change(function () {
+            var trainerId = $(this).val();
+            var topicId = document.getElementById('topicDropdown').value;
+
+            console.log(trainerId);
+
+            if (trainerId != 0) {
+                $.ajax({
+                    url: "http://localhost:5038/api/Manager/GetModeofTrainingByTopicId?userId=" + trainerId + "&topicId=" + topicId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#modePreferenceDiv').empty();
+                            if (response.data == 'online' || response.data == 'offline') {
+
+                                $('#modePreferenceDiv').append(`
+                                            <label class="modePreferenceLabel form-label">Mode Preference: ${response.data}</label>
+                                `);
+                            }
+                            else {
+                                $('#modePreferenceDiv').append(`
+                                                                 <label class="form-label" for="modePreference">Mode Preference:</label>
+                                                     <div class="col-md-8">
+
+                                                                <select id="modePreference" class="form-control" style="border-color:#7B57CB;">
+                                                            <option value=0>--Select Mode Preference--</option>
+                                                            <option value='online'>Online</option>
+                                                            <option value='offline'>Offline</option>
+
+                                                        </select>
+
+                                                    </div>
+                                                `);
+
+
+                            }
+
+
+                        } else {
+                            $('#modePreferenceDiv').append('<label class="form-label">Error retrieving Mode Preference</label>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        $('#modePreferenceDiv').append('<label class="form-label">Error retrieving Mode Preference</label>');
+                    },
+                    complete: function () {
+                        // Optionally, you can hide loaders or perform other actions here
+                    }
+                });
+            }
+        });
+
+        $('#createNominationForm').submit(function (e) {
+            e.preventDefault();
+
+            let modePreference;
+
+            if ($('#modePreference').length) {
+                modePreference = $('#modePreference').val();
+            } else {
+                modePreference = $('.modePreferenceLabel').text().split(':')[1].trim();
+            }
+
+            let topicId = document.getElementById('topicDropdown').value;
+            let trainerId = document.getElementById('trainerDropdown').value;
+            let participateId = @ViewBag.PartcipateId;
+            let userId = $('#userId').val().trim();
+
+
+            var requestData = {
+                modePreference: modePreference,
+                topicId: topicId,
+                trainerId: trainerId,
+                participateId: participateId,
+                userId: userId
+
+            };
+
+            $.ajax({
+                url: "http://localhost:5038/api/Manager/NominateParticipate",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    ShowMessage(response.message);
+                },
+                error: function (xhr, status, error) {
+                    // alert("Something went wrong, please try afer sometime.");
+
+                    //check if there is a responseText available
+
+                    if (xhr.responseText) {
+                        try {
+
+                            //parse the responseText into javascriopt object
+                            var errorResponse = JSON.parse(xhr.responseText);
+
+                            //check the properties of the errorResponse object
+                            if (errorResponse && errorResponse.message) {
+                                // Display the error message to the user
+                                alert("Error : " + errorResponse.message);
+                            } else {
+                                // Display a generic error message
+                                alert("An error occured. Please try again later.");
+
+                            }
+
+                        } catch (parseError) {
+                            console.error("Error parsing response." + parseError);
+                            alert("An error occured. Please try again later.");
+                        }
+
+                    }
+                    else {
+                        // Display a generic error message if no responseText is available
+                        alert("An expected error occured. Please try again later.");
+                    }
+
+                },
+                complete: function () {
+
+                }
+            });
+
+        });
+
+    });
+
+    function ShowMessage(message) {
+        // Get the message container
+        var messageContainer = document.getElementById('messageContainer');
+
+        // Display success message
+        messageContainer.textContent = message;
+        messageContainer.style.backgroundColor = '#4CAF50';
+        messageContainer.style.opacity = '1';
+
+        // Hide the message after 3 seconds (3000 milliseconds)
+        setTimeout(function () {
+            messageContainer.style.opacity = '0';
+        }, 3000);
+
+        // Redirect to index page after a short delay (optional)
+        setTimeout(function () {
+            window.location.href = '/Manager/GetParticipantsByManagerId';
+        }, 1500); // Redirect after 1.5 seconds (3500 milliseconds)
+    }
+
+
+
+</script>

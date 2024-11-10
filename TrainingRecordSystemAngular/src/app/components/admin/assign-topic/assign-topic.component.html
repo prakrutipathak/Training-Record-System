@@ -1,0 +1,63 @@
+<div class="container">
+    <div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <img src="assets/loaderImage.gif" alt="loading" />
+    </div>
+    <br>
+    <div *ngIf="!loading" class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5>Assign topic to {{userDetails.firstName}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label class="form-label" for="topic">Topic:</label>
+                        <div class="col-md-8">
+                            <select id="topic" class="form-select" [(ngModel)]="assignTrainingTopic.topicId">
+                                <option value=0 selected disabled>----------- Topic name -----------</option>
+                                <option *ngFor="let topic of topics" [value]="topic.topicId">{{topic.topicName}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary" style="background-color: #00b4c1;" (click)="assignTopicToTrainer()">Assign</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div class="mb-3">
+                    <div class="card shadow">
+                        
+                            <div *ngIf="assignedTopics?.length != 0">
+                                <div class="card-header">
+
+                                    <h5>Topics already assigned to {{userDetails.firstName}}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table text-center">
+                                    
+                                        <tbody>
+                                            <tr *ngFor="let item of assignedTopics">
+                                                <td>{{item.topic.topicName}}</td>
+                                                <td><button class="btn btn-danger" (click)="confirmUnassign(item.topicId)">Unassign</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div *ngIf="assignedTopics?.length == 0">
+                                <h4 class="text-center py-1">No topic assign to {{userDetails.firstName}}</h4>
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <br>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-danger me-2" [routerLink]="['/trainer-list']" routerLinkActive="router-link-active"><i class="fas fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

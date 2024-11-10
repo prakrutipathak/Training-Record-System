@@ -1,0 +1,63 @@
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <img src="assets/loaderImage.gif" alt="loading" />
+</div>
+
+
+
+
+  <h1 class="custom-heading text-center my-3">Upcoming Training Program</h1>
+
+  <div class="container row py-1">
+    <div class="col-md-1">
+      
+    </div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-2"> <!-- Adjust col-md-4 based on your layout requirements -->
+          <label class="form-label" for="jobdropdown">Job Role</label>
+        </div>
+        <div class="col-md-8"> <!-- Adjust col-md-8 based on your layout requirements -->
+          <select id="jobdropdown" name="jobdropdown" class="form-select"  [ngModel]="jobId" (change)="onJobChange($event)">
+            <option value=null selected>----------Select Job role------------</option>
+            <option *ngFor="let job of allJobs" [value]="job.jobId">{{ job.jobName }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+  </div>
+
+  <div *ngIf="!loading" class="container">
+    
+    <table  class="table table-striped">
+      <thead>
+        <tr>
+          <th class="custom-thead text-light">Trainer Name</th>
+          <th class="custom-thead text-light">Training Topic</th>
+          <th class="custom-thead text-light">Job Role</th>
+          <th class="custom-thead text-light">Start Date</th>
+          <th class="custom-thead text-light">End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="!loading && upcomingTraining?.length == 0">
+          <td colspan="4">No record found...</td>
+         </tr>
+        <tr *ngFor="let report of upcomingTraining">
+          <td>{{report.trainerName}}</td>
+          <td>{{report.topicName}}</td>
+          <td>{{report.jobName}}</td>
+          <td>{{report.startDate|date}}</td>
+          <td>{{report.endDate|date}}</td>
+          
+        </tr>
+       
+      </tbody>
+    </table>
+    
+  </div>
+     
+
+                        

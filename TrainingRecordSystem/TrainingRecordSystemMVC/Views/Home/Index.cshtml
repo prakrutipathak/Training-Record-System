@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="home">
+    <div class="text custom">
+        <h1 class="display-4" style="font-size: 70px;">Welcome @User.Identity.Name</h1>
+        <p><b><h2 style="font-size: 35px;">Training Record System</h2></b></p>
+        <br>
+        @if (!User.Identity.IsAuthenticated)
+        {
+            
+            <h6 style="font-size: 20px;"> Click here to <a class="custom-link" asp-action="Login" asp-controller="Auth">Sign In</a>.</h6>
+        }
+    </div>
+</div>
+
+<style>
+
+    .home {
+        background: url('images/civicabackground.png') no-repeat center center fixed;
+        height: 79vh; /* Adjust height as needed */
+        background-size: cover;
+        display: flex;
+        width: 106%;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .text.custom {
+        margin-left: 8%;
+        color: black; /* Text color */
+    }
+
+    .custom-link {
+        color: #009CA6; /* Grey color */
+        text-decoration: none; /* Remove underline */
+        transition: color 0.3s ease; /* Smooth transition for color change */
+    }
+
+        .custom-link:hover {
+            color: #000; /* Change color on hover to blue */
+        }
+
+</style>
+
+

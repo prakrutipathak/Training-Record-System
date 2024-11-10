@@ -1,0 +1,84 @@
+<div class="container">
+    <div *ngIf="loading" class="loader-overlay">
+        <img src="assets/loaderImage.gif" class="loader-overlay" alt="loading" />
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="custom-heading card-title text-center">Nomination Form</h4>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="nominationForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+
+
+                        <div class="col-md-11">
+                            <label class="form-label" for="topicId">Topic</label>
+                            <select id="topicId" class="form-select" [(ngModel)]="topicId"
+                                (change)="onTopicChange($event)" formControlName="topicId">
+                                <option value=0 selected disabled>-- Topic name --</option>
+                                <option  *ngFor="let topic of assignedTopics" [value]="topic.trainerTopic.topic.topicId">{{topic.trainerTopic.topic.topicName}}
+                                </option>
+                            </select>
+                            <div *ngIf="formControls['topicId'].invalid && formControls['topicId'].touched">
+                                <small class="text-danger"
+                                    *ngIf="formControls['topicId'].errors?.['required'] || formControls['topicId'].errors?.['invalidTopic']">
+                                    Topic name is required
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-11">
+                            <label class="form-label" for="trainerId">Trainer</label>
+                            <select id="trainerId" class="form-select" [(ngModel)]="trainerId"
+                            (change)="onUserChange($event)" formControlName="trainerId">
+                                <option value=0 selected disabled>-- Trainer name --</option>
+                                <option  *ngFor="let topic of assignedTrainer" [value]="topic.trainerTopic.userId">{{topic.trainerTopic.user.firstName}} 
+                                </option>
+                            </select>
+                            <div *ngIf="formControls['trainerId'].invalid && formControls['trainerId'].touched">
+                                <small class="text-danger"
+                                    *ngIf="formControls['trainerId'].errors?.['required'] || formControls['trainerId'].errors?.['invalidTopic']">
+                                    Trainer name is required
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 py-4">
+                            <div class="col-md-11" *ngIf="defaultModePrefrence == 'hybrid'">
+                                <label for="modePreference" class="form-label">Mode Preference</label>
+                                <select class="form-select" formControlName="modePreference">
+                                    <option value="" selected disabled>-- Select mode --</option>
+                                    <option value="offline">Offline</option>
+                                    <option value="online">Online</option>
+                                </select>
+                                <!-- <div
+                                    *ngIf="formControls['modePreference'].invalid && formControls['modePreference'].touched && defaultModePrefrence == 'hybrid'">
+                                    <small class="text-danger"
+                                        *ngIf="formControls['modePreference'].errors?.['required']">
+                                        Mode preference is required.
+                                    </small>
+                                </div> -->
+                            </div>
+                            <div class="col-md-11" *ngIf="defaultModePrefrence == 'online' || defaultModePrefrence == 'offline' ">
+                                <label for="modePreference" class="form-label">Mode preference : {{defaultModePrefrence}}</label>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-danger me-2"
+                                [routerLink]="['/participantsByManager']" routerLinkActive="router-link-active"><i
+                                    class="fas fa-arrow-left"></i></button>
+                            <button type="submit" [disabled]="!nominationForm.valid"
+                                class="btn btn-primary btn-block"><i class="fas fa-plus"></i> Nominate</button>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

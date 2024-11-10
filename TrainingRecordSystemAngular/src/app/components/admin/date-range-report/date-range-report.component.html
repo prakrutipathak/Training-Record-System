@@ -1,0 +1,69 @@
+<div class="container" >
+    <h1 class="custom-heading text-center">Date Range Based Report</h1>
+    <div *ngIf="loading" class="loader-container">
+        <img src="assets/loadergif.gif" alt="Loading..." class="loader-image">
+    </div>
+    <div class="row">
+        <div class="col-lg-4 mt-1">
+            <div class="form-outline" style="width: 100%;">
+                <label class="form-label" for="jobrole"><b>Job Role</b></label>
+                <select id="jobrole" name="jobrole" class="form-select" [(ngModel)]="jobId"
+                    (change)="onJobRoleChange($event)" style="border-color: #7B57CB;" required>
+                    <option value=null disabled>----- Select job role -----</option>
+                    <option *ngFor="let jobsrole of jobsroles" [value]="jobsrole.jobId">{{ jobsrole.jobName }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-1">
+            <div class="form-outline" style="width: 100%;">
+                <label class="form-label" for="startDate"><b>Start Date</b></label>
+                <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="startDate"
+                    style="border-color: #7B57CB;" (input)="selectStartDate()">
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-1" *ngIf="startDate">
+            <div class="form-outline" style="width: 100%;">
+                <label class="form-label" for="endDate"><b>End Date</b></label>
+                <input type="date" class="form-control" id="endDate" name="endDate" [(ngModel)]="endDate"
+                    style="border-color: #7B57CB;" (input)="selectEndDate()">
+            </div>
+        </div>
+
+    </div>
+
+    
+    <div class="table-responsive mt-3" *ngIf="!loading">
+            <table class="table table-striped books-table" style="font-size: smaller; text-align: center;">
+                <thead>
+                    <tr>
+                        <th class="custom-thead text-light" >Topic Name</th>
+                        <th class="custom-thead text-light">Trainer Name</th>
+                        <th class="custom-thead text-light">Start Date</th>
+                        <th class="custom-thead text-light">End Date</th>
+                        <th class="custom-thead text-light">Duration</th>
+                        <th class="custom-thead text-light">Mode Preference</th>
+                        <th class="custom-thead text-light">Total Participants</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="reportDetails.length > 0; else noUsers">
+                    <tr *ngFor="let reportDetail of reportDetails; let i = index">
+                        <td>{{ reportDetail.topicName }}</td>
+                        <td>{{ reportDetail.trainerName }}</td>
+                        <td>{{ reportDetail.startDate| date }}</td>
+                        <td>{{ reportDetail.endDate| date }}</td>
+                        <td>{{ reportDetail.duration }}</td>
+                        <td>{{ reportDetail.modePreference }}</td>
+                        <td>{{ reportDetail.totalParticipateNo }}</td>
+                    </tr>
+                </tbody>
+                <ng-template #noUsers>
+                    <tr *ngIf="!loading && reportDetails.length == 0" style="background: rgb(250, 245, 245);">
+                        <td colspan="7" class="text-center justify-content-center">No record found.</td>
+                    </tr>
+                </ng-template>
+            </table>
+    </div>
+
+
+</div>

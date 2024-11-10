@@ -1,0 +1,183 @@
+﻿@using TrainingRecordSystemMVC.ViewModels;
+@model UserDetailsViewModel;
+
+<div class="container">
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5>Assign topic to @Model.FirstName</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label class="form-label" for="topic">Topic:</label>
+                        <div class="col-md-8">
+                            <select id="topic" class="form-select" asp-items="@(new SelectList(ViewBag.Topics, "TopicId", "TopicName"))">
+                                <option value=0 selected disabled>----------- Topic name -----------</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary" style="background-color: #00b4c1;" onclick="assignTopic()">Assign</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div class="mb-3">
+                    <div class="card shadow">
+
+                        @if(ViewBag.AssignedTopics != null)
+                        {
+                            <div class="card-header">
+
+                                <h5>Topics assigned to @Model.FirstName</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table text-center">
+
+                                    <tbody>
+
+                                        @foreach(var item in ViewBag.AssignedTopics)
+                                        {
+                                        <tr>
+                                            <td>@item.Topic.TopicName</td>
+                                            <td><button class="btn btn-danger" onclick="confirmUnassign('@item.TopicId', '@item.Topic.TopicName')">Unassign</button></td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        @if(ViewBag.AssignedTopics.Count == 0)
+                        {
+                            <h4 class="text-center py-1">No topic assign to @Model.FirstName</h4>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" type="button" class="btn btn-outline-danger me-2"><i class="fas fa-arrow-left"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function assignTopic() {
+        let userId = @ViewBag.UserId;
+        let topicId = document.getElementById("topic").value;
+
+        if (topicId == "0") {
+            alert("Select a topic to assign.")
+            return;
+        }
+
+        let requestData = {
+            userId: userId,
+            topicId: Number(topicId)
+        };
+
+        $.ajax({
+            url: "http://localhost:5038/api/Admin/AssignTopicToTrainer/",
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData),
+            success: function (response) {
+                if (response.success) {
+                    alert("Successfully assigned topic")
+                    window.location.href = "/Admin/AssignTopic"
+                        + "?userId=" + @ViewBag.UserId;
+                }
+            },
+            error: function (xhr, status, error) {
+                // Check if there is a responseText available
+                if (xhr.responseText) {
+                    try {
+                        // Parse the responseText into a JavaScript object
+                        var errorResponse = JSON.parse(xhr.responseText);
+
+                        // Check the properties of the errorResponse object
+                        if (errorResponse && errorResponse.message) {
+                            // Display the error message to the user
+                            alert(errorResponse.message);
+                        } else {
+                            // Display a generic error message
+                            alert('An error occurred. Please try again. ');
+                        }
+
+                    } catch (parseError) {
+                        console.error('Error parsing response:', parseError);
+                        alert('An error occurred. Please try again. ');
+                    }
+                } else {
+                    // Display a generic error message if no responseText is available
+                    alert('An unexpected error occurred. Please try again. ');
+                }
+            },
+            complete: function () {
+            }
+        })
+    }
+
+    function confirmUnassign(topicId, topicName) {
+        if(confirm('Are you sure you want to unassign this topic (' + topicName + ')?')) {
+            unassignTopic(topicId);
+        }
+    }
+
+    function unassignTopic(topicId) {
+        let userId = @ViewBag.UserId;
+
+        let requestData = {
+            userId: userId,
+            topicId: Number(topicId)
+        };
+
+        $.ajax({
+            url: "http://localhost:5038/api/Admin/UnassignTopic"
+             + "?userId=" + userId
+             + "&topicId=" + topicId,
+            type: 'DELETE',
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    alert("Successfully unassigned topic")
+                    window.location.href = "/Admin/AssignTopic"
+                        + "?userId=" + @ViewBag.UserId;
+                }
+            },
+            error: function (xhr, status, error) {
+                // Check if there is a responseText available
+                if (xhr.responseText) {
+                    try {
+                        // Parse the responseText into a JavaScript object
+                        var errorResponse = JSON.parse(xhr.responseText);
+
+                        // Check the properties of the errorResponse object
+                        if (errorResponse && errorResponse.message) {
+                            // Display the error message to the user
+                            alert('Error: ' + errorResponse.message);
+                        } else {
+                            // Display a generic error message
+                            alert('An error occurred. Please try again. ');
+                        }
+
+                    } catch (parseError) {
+                        console.error('Error parsing response:', parseError);
+                        alert('An error occurred. Please try again. ');
+                    }
+                } else {
+                    // Display a generic error message if no responseText is available
+                    alert('An unexpected error occurred. Please try again. ');
+                }
+            },
+            complete: function () {
+            }
+        })
+    }
+</script>

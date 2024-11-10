@@ -1,0 +1,73 @@
+<div class="container" >
+    <div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <img src="assets/loaderImage.gif" alt="loading" />
+    </div>
+    
+    <h1 class=" custom-heading text-center">Monthly Report</h1>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-outline" style="width: 100%;">
+                <label class="form-label" for="trainer"><b>Trainer</b></label>
+                <select id="trainer" name="trainer" class="form-select" [(ngModel)]="userId" (change)="onTrainerChange($event)" style="border-color: #7B57CB;"
+                    required>
+                    <option value=null disabled>----- Select Trainer -----</option>
+                    <option *ngFor="let trainer of trainers" [value]="trainer.userId">{{ trainer.firstName }}</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="col-lg-4">
+            <div class="form-outline" style="width: 100%;">
+                <label class="form-label" for="year"><b>Year</b></label>
+                <select id="year" name="year" class="form-select" [(ngModel)]="year"
+                    (change)="onYearChange($event)" style="border-color: #7B57CB;" required>
+                    <option value=null>----- Select Year -----</option>
+                    <option *ngFor="let year of years;" [value]="year">{{ year }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-4" *ngIf="year != null">
+            <div class="form-outline" style="width: 100%;">
+                <label class="form-label" for="month"><b>Month</b></label>
+                <select id="month" name="month" class="form-select" [(ngModel)]="month"
+                    (change)="onMonthChange($event)" style="border-color: #7B57CB;" required>
+                    <option value=null>----- Select Month -----</option>
+                    <option *ngFor="let month of months; let i = index" [value]="i+1">{{ month }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="table-responsive mt-3" *ngIf="!loading">
+            <table class="table table-striped books-table" style="font-size: smaller; text-align: center;">
+                <thead>
+                    <tr>
+                        <th class="custom-thead text-light" >Topic Name</th>
+                        <th class="custom-thead text-light">Start Date</th>
+                        <th class="custom-thead text-light">End Date</th>
+                        <th class="custom-thead text-light">Duration</th>
+                        <th class="custom-thead text-light">Mode Preference</th>
+                        <th class="custom-thead text-light">Total Participants</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="reportDetails.length > 0; else noUsers">
+                    <tr *ngFor="let reportDetail of reportDetails; let i = index">
+                        <td>{{ reportDetail.topicName }}</td>
+                        <td>{{ reportDetail.startDate| date }}</td>
+                        <td>{{ reportDetail.endDate| date }}</td>
+                        <td>{{ reportDetail.duration }}</td>
+                        <td>{{ reportDetail.modePreference }}</td>
+                        <td>{{ reportDetail.totalParticipateNo }}</td>
+                    </tr>
+                </tbody>
+                <ng-template #noUsers>
+                    <tr *ngIf="!loading && reportDetails.length == 0" style="background: rgb(250, 245, 245);">
+                        <td colspan="6" class="text-center justify-content-center">No record found.</td>
+                    </tr>
+                </ng-template>
+            </table>
+    </div>
+
+
+</div>

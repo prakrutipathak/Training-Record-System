@@ -1,0 +1,10 @@
+.civicaBtn{
+    color:white;
+    background-color: #7B57CB;
+
+}
+.civicaBtn:hover{
+    color: white;
+    background-color: #D62598;
+    text-decoration: dotted;
+}

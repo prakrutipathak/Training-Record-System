@@ -1,0 +1,319 @@
+﻿@using TrainingRecordSystemMVC.ViewModels
+@model List<MonthlyAdminReportViewModel>
+@{
+    int userId = ViewBag.UserId;
+    int? month = ViewBag.Month;
+    int? year = ViewBag.Year;
+
+    var months = new[]
+        {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+     };
+}
+
+<h1 class="custom-heading text-center my-3">Monthly Report</h1>
+
+<div class="row">
+    <div class="col-lg-4 mt-3">
+        <div class="form-outline" style="width: 100%;">
+            <label class="control-label"><b>Trainer:</b></label>
+            <select id="trainerDropdown" class="form-control" style="border-color:#7B57CB;">
+                <option value=0>--Select Trainer--</option>
+                @{
+                    var trainers = ViewBag.Trainers as List<AllTrainersViewModel>;
+
+                    if (trainers != null)
+                    {
+                        for (int i = 0; i < trainers.Count; i++)
+                        {
+                            <option value="@trainers[i].UserId" selected='@(userId == trainers[i].UserId)'>@trainers[i].FirstName </option>
+                        }
+                    }
+                }
+            </select>
+            <div id="selectTrainer" style="color: red;">*Please select trainer.</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mt-3">
+        <div class="form-outline" style="width: 100%;">
+            <label class="control-label"><b>Year:</b></label>
+            <select id="yearDropdown" class="form-control" style="border-color:#7B57CB;">
+                <option value=0>--Select Year--</option>
+                @{
+                    for (int i = 2000; i <= 2030; i++)
+                    {
+                        <option value="@i" selected='@(year == i)'> @i</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mt-3" id="monthDiv" style="display: none;">
+        <div class="form-outline" style="width: 100%;">
+            <label class="control-label"><b>Month:</b></label>
+            <select id="monthDropdown" name="type" class="form-control" style="border-color:#7B57CB;">
+                <option value=0>--Select Month--</option>
+                @{
+
+                    if (months != null)
+                    {
+                        for (int i = 0; i < months.Count(); i++)
+                        {
+                            <option value="@(i+1)" selected='@(month == (i+1))'>@months[i]</option>
+                        }
+                    }
+                }
+            </select>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-light" style="background-color:#00b4c1">Topic Name</th>
+                <th class="text-light" style="background-color:#00b4c1">Start Date</th>
+                <th class="text-light" style="background-color:#00b4c1">End Date</th>
+                <th class="text-light" style="background-color:#00b4c1">Duration</th>
+                <th class="text-light" style="background-color:#00b4c1">Mode Preference</th>
+                <th class="text-light" style="background-color:#00b4c1">Total Participants</th>
+            </tr>
+        </thead>
+        @if (Model == null || Model.Count == 0)
+        {
+            <tbody>
+            <td colspan="6" class="text-center">
+                No Record Found!
+            </td>
+            </tbody>
+        }
+        else
+        {
+            <tbody>
+                @foreach (var data in Model)
+                {
+                    <tr>
+
+                        <td>@data.TopicName</td>
+                        <td>@data.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@data.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>@data.Duration hrs/day</td>
+                        <td>@data.ModePreference</td>
+                        <td>@data.TotalParticipateNo</td>
+                    </tr>
+                }
+            </tbody>
+        }
+
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var year = document.getElementById('yearDropdown').value;
+            var selectedUserId = document.getElementById('trainerDropdown').value;
+
+            if (selectedUserId == 0 || selectedUserId=="") {
+                $('#selectTrainer').show();
+            }
+            else{
+                $('#selectTrainer').hide();
+
+            }
+
+            var selectedYear= document.getElementById('yearDropdown').value;
+            if (selectedYear == 0 || selectedYear == "") {
+                $('#monthDiv').hide();
+            }
+            else {
+                $('#monthDiv').show();
+
+            }
+
+          
+            $('#trainerDropdown').change(function () {
+                var userId = $(this).val();
+                $('#monthDiv').hide();
+
+
+                if (userId != 0) {
+                    $('#selectTrainer').hide();
+                    window.location.href = "/Admin/MonthlyAdminReport?userId=" + userId;
+                }
+                else {
+                    $('#selectTrainer').show();
+                    window.location.href = "/Admin/MonthlyAdminReport";
+                }
+            });
+
+            $('#yearDropdown').change(function () {
+                year = $(this).val();
+                $('#monthDiv').show();
+                $('#monthDropdown').val(0);
+
+            });
+
+
+            $('#monthDropdown').change(function () {
+                var month = $(this).val();
+
+                if (month != 0) {
+                    window.location.href = "/Admin/MonthlyAdminReport?userId=" + @userId + "&month=" + month + "&year=" + year;
+                }
+
+
+            });
+
+        });
+
+    </script>
+
+    <style>
+
+        /* Custom styles for the page size dropdown */
+        #pageSize {
+            width: 80px;
+            display: inline-block;
+        }
+
+        /* Custom pagination styles */
+        .pagination {
+            margin-top: 20px;
+        }
+
+            .pagination .page-item.active .page-link {
+                background-color: #00b4c1;
+                border-color: #00b4c1;
+                color: black; /* Set the text color to black for active page link */
+            }
+
+            .pagination .page-item .page-link {
+                color: #00b4c1;
+            }
+
+            .pagination .page-item.disabled .page-link {
+                color: #6c757d;
+                pointer-events: none;
+                cursor: default;
+            }
+
+        /* Additional margin for the page size label */
+        label[for="pageSize"] {
+            margin-right: 10px;
+        }
+
+        .page-size-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+
+            /* Styling the label */
+            .page-size-container label {
+                margin-right: 10px;
+                font-weight: bold;
+                font-size: 1.1em;
+            }
+
+        /* Custom styles for the dropdown */
+        #pageSize {
+            width: 100px;
+            padding: 5px 10px;
+            font-size: 1em;
+            border: 2px solid #00b4c1;
+            border-radius: 5px;
+            color: #00b4c1;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            #pageSize:hover {
+                border-color: #00b4c1;
+                color: #00b4c1;
+            }
+
+
+
+        /* Additional margin for the page size label */
+        label[for="pageSize"] {
+            margin-right: 10px;
+        }
+
+        /* Positioning and styling the loader overlay */
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        /* Centering the loader image */
+        .loader-image {
+            width: 50px;
+            height: 50px;
+        }
+
+        .table {
+            border-collapse: separate;
+            border-spacing: 10px; /* Adjust the spacing as needed */
+        }
+
+            .table th,
+            .table td {
+                padding: 10px; /* Add padding if needed for content */
+                text-align: center;
+            }
+
+        .custom-thead {
+            background-color: #00b4c1;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+            .form-select:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+        .pagination {
+            margin: 1rem;
+        }
+
+        .custom-heading {
+            margin-top: 15px;
+            font-size: 2rem; /* Adjust the size as needed */
+            font-weight: bold; /* Makes the text bold */
+            color: #000000; /* Custom color */
+            text-align: center; /* Center the text */
+        }
+
+    </style>

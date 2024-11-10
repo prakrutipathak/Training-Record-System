@@ -1,0 +1,182 @@
+﻿@using TrainingRecordSystemMVC.ViewModels
+@model AddProgramDetailsViewModel
+
+<div class="container">
+    <h2 class="custom-heading text-center my-3">Add Training Program Details</h2>
+
+    <form asp-action="AddProgramDetails" method="post" class="needs-validation" novalidate>
+        <div class="row justify-content-center">
+            <div class="col-md-6 mb-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="row mb-3">
+
+                            <div class="col-md-6 form-group">
+                                <label asp-for="StartDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="StartDate" name="StartDate">
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                                    
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="EndDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="EndDate" name="EndDate" >
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="StartTime" class="form-label">Start Time</label>
+                                <select class="form-select" id="StartTime" name="StartTime" required>
+                                    <option value="" selected disabled>- Select time --</option>
+                                  @*   <option value="time1">Time 1</option>
+                                    <option value="time2">Time 2</option> *@
+                                    <!-- Add options dynamically if needed -->
+                                </select>
+                                <span asp-validation-for="StartTime" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="EndTime" class="form-label">End Time</label>
+                                <select class="form-select" id="EndTime" name="EndTime" required>
+                                    <option value="" selected disabled>- Select time --</option>
+                                @*     <option value="time1">Time 1</option>
+                                    <option value="time2">Time 2</option> *@
+                                    <!-- Add options dynamically if needed -->
+                                </select>
+                                <span asp-validation-for="EndTime" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Duration</label>
+                                <input class="form-control" type="text" id="Duration" name="Duration" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="ModePreference" class="form-label">Mode Preference</label>
+                                <select class="form-select" id="ModePreference" name="ModePreference" required>
+                                    <option value="" selected disabled>-- Select mode --</option>
+                                    <option value="offline">Offline</option>
+                                    <option value="online">Online</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                                <span asp-validation-for="ModePreference" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="TargetAudience" class="form-label">Target Audience</label>
+                                <textarea class="form-control" id="TargetAudience" name="TargetAudience" placeholder="Additional notes"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/TrainingTopics" class="btn btn-outline-danger me-2"><i class="fas fa-arrow-left"></i></a>
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+
+                        <div>
+                            <input asp-for="TrainerTopicId" id="TrainerTopicId" type="hidden" name="TrainerTopicId" value=0 />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function populateTimesDropdown(selectId) {
+        var select = document.getElementById(selectId);
+
+        select.innerHTML = '';
+        
+        var defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.text = '- Select time --';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        select.appendChild(defaultOption);
+
+        
+        for (var hour = 10; hour < 20; hour++) {
+            var hourStr = (hour < 10) ? '0' + hour : '' + hour; 
+            var option = document.createElement('option');
+            option.value = hourStr + ':00';
+            option.text = hourStr + ':00';
+            select.appendChild(option);
+        }
+
+        select.addEventListener('change', function () {
+            calculateDuration();
+        });
+    }
+
+    
+    populateTimesDropdown('StartTime');
+
+    populateTimesDropdown('EndTime');
+
+    
+    function calculateDuration() {
+        var startTimeSelect = document.getElementById('StartTime');
+        var endTimeSelect = document.getElementById('EndTime');
+        var durationInput = document.getElementById('Duration');
+
+        var startTime = startTimeSelect.value;
+        var endTime = endTimeSelect.value;
+
+        // Check if both start time and end time are selected
+        if (startTime && endTime) {
+           
+            var start = new Date('2000-01-01T' + startTime + ':00');
+            var end = new Date('2000-01-01T' + endTime + ':00');
+
+            var difference = end - start;
+
+            if(difference <= 0 )
+            {
+                difference = 0;
+                alert("please choose appropriate time")
+                return;
+            }
+
+            var hours = Math.floor(difference / 3600000);
+            var minutes = Math.round((difference % 3600000) / 60000);
+
+            var duration = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+
+            durationInput.value = duration;
+        } else {
+            durationInput.value = '';
+        }
+    }
+
+    //For disable previous dates
+    function setMinimumDate() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+
+        var minDate = yyyy + '-' + mm + '-' + dd;
+
+        document.getElementById('StartDate').min = minDate;
+        document.getElementById('EndDate').min = minDate;
+    }
+
+    setMinimumDate();
+
+    function getTrainerTopicId(){
+        var currentUrl = window.location.href;
+        var id = currentUrl.substring(currentUrl.lastIndexOf('/') + 1);
+        console.log(id);
+        var idInt = parseInt(id, 10);
+        console.log(idInt);
+        document.getElementById('TrainerTopicId').value = idInt;
+    }
+
+    getTrainerTopicId();
+</script>
+
+

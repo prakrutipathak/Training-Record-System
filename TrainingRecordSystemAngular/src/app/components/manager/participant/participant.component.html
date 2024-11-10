@@ -1,0 +1,51 @@
+
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <img src="assets/loaderImage.gif" alt="loading" />
+</div>
+
+<h1 class="custom-heading text-center my-3">Participants</h1>
+
+
+<div *ngIf="!loading" class="container">
+    
+    <table class="table table-striped">
+        <thead >
+            <tr>
+                <th class="custom-thead text-light" style="cursor: pointer;">Participant Name </th>
+                <th class="custom-thead text-light">Email</th>
+                <th class="custom-thead text-light">Job Role</th>
+                <th class="custom-thead text-light">Action</th>
+
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!loading && (!participants || participants.length === 0)">
+                <td colspan="6" class="text-center">No contacts found!</td>
+            </tr>
+            
+            <tr *ngFor="let p of participants" >
+                
+                <td >{{p.firstName}}&nbsp; {{p.lastName}}</td>
+                <td >{{p.email}}</td>
+                
+              
+                <td >{{p.job.jobName}}</td>
+                <td >
+                    <a  [routerLink]="['/nominateParticipant/', p.participantId]" routerLinkActive="router-link-active"
+                       class="btn btn-primary" style="text-decoration: none;" >
+                      <i class="fas fa-info-circle mr-1"></i> Nominate
+                    </a>
+                  </td>
+             
+
+                
+            </tr>
+        </tbody>
+    </table>
+    <div class="col-sm-1 text-center">
+
+        <a class="btn btn-dark" style="background-color: #00b4c1;" [routerLink]="['/addParticipant']" routerLinkActive="router-link-active" ><i class="fa fa-user-plus"></i></a>
+    </div>
+
+</div>

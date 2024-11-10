@@ -1,0 +1,62 @@
+
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <img src="assets/loaderImage.gif" alt="loading" />
+</div>
+
+<h1 class="custom-heading text-center my-4">Training Topics</h1>
+
+
+<div *ngIf="!loading" class="container">
+    
+    <table class="table table-striped">
+        <thead >
+            <tr>
+                <th class="custom-thead text-light">Topic Name</th>
+                <th class="custom-thead text-light">Job Role</th>
+                <th class="custom-thead text-light">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!loading && (!trainingTopics || trainingTopics.length === 0)">
+                <td colspan="3" class="text-center">No topics found!</td>
+            </tr>
+            
+            <tr *ngFor="let p of trainingTopics" >
+                
+                <td >{{p.topic.topicName}}</td>
+                <td >{{p.job.jobName}}</td>
+                <td > 
+                    <button *ngIf="!p.isTrainingScheduled" class="btn civicaBtn" [routerLink]="['/add-training-program-detail/', p.trainerTopicId]" routerLinkActive="router-link-active" >Add Details</button>
+                    <button *ngIf="p.isTrainingScheduled" class="btn civicaBtnRev" [routerLink]="['/program-training/', p.topicId]" routerLinkActive="router-link-active" >My Training</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-sm-1">
+            <label for="pageSize" class="form-label"></label>
+            <select id="pageSize" class="form-select" [(ngModel)]="pageSize" (change)="changePageSize(pageSize)">
+                <option [ngValue]="2">2</option>
+                <option [ngValue]="4">4</option>
+                <option [ngValue]="6">6</option>
+            </select>
+        </div>
+        <div class="col-sm-10 d-flex justify-content-center">
+            <ul class="pagination mb-0">
+                <li class="page-item">
+                    <button class="page-link" (click)="previousPage()" [disabled]="pageNumber === 1">Previous</button>
+                </li>
+                <li *ngFor="let i of [].constructor(totalPages); let index = index" class="page-item" [class.active]="pageNumber === index + 1">
+                    <button class="page-link" (click)="changePage(index + 1)">{{ index + 1 }}</button>
+                </li>
+                <li class="page-item">
+                    <button class="page-link" (click)="nextPage()" [disabled]="pageNumber === totalPages">Next</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+
+
+</div>
